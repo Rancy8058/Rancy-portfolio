@@ -1,52 +1,54 @@
-import React from 'react';
-import { BackgroundEffects } from './components/BackgroundEffects';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { About } from './components/About';
-import { Skills } from './components/Skills';
-import { Projects } from './components/Projects';
-import { CertificationsAchievements } from './components/CertificationsAchievements';
-import { Resume } from './components/Resume';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
+import React, { useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Skills from './components/Skills';
+import Projects from './components/Projects';
+import Certifications from './components/Certifications';
+import Resume from './components/Resume';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import './App.css';
 
-function App() {
+export default function App() {
+  useEffect(() => {
+    // Scroll Reveal Intersection Observer
+    const revealElements = document.querySelectorAll('.reveal-item');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      }
+    );
+
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
   return (
-    <div className="portfolio-app">
-      {/* Subtle Ambient Background Animation Layer */}
-      <BackgroundEffects />
-
-      {/* Sticky Responsive Navbar */}
+    <div className="app-layout">
       <Navbar />
-
-      {/* Main Content Sections */}
-      <main>
-        {/* 1. Hero Section */}
+      <main className="main-content">
         <Hero />
-
-        {/* 2. About Section (Includes Education inside it) */}
         <About />
-
-        {/* 3. Skills Section */}
         <Skills />
-
-        {/* 4. Projects Section (Exactly 2 Projects) */}
         <Projects />
-
-        {/* 5. Certifications & Achievements Section */}
-        <CertificationsAchievements />
-
-        {/* 6. Resume Section */}
+        <Certifications />
         <Resume />
-
-        {/* 7. Contact Section */}
         <Contact />
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );
 }
-
-export default App;

@@ -1,186 +1,88 @@
-import React, { useState } from 'react';
-import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import { IconGraduationCap, IconMapPin, IconCalendar, IconSparkles, IconCheck } from './Icons';
+import React from 'react';
+import './About.css';
 
-export const About = () => {
-  const [sectionRef, isVisible] = useIntersectionObserver();
-  const [imgLoaded, setImgLoaded] = useState(false);
-
-  const educationData = [
-    {
-      institution: 'Lovely Professional University',
-      location: 'Phagwara, Punjab',
-      degree: 'Bachelor of Technology - Computer Science and Engineering',
-      specialization: 'Specialization in Artificial Intelligence & Machine Learning',
-      metricLabel: 'CGPA',
-      metricValue: '8.21',
-      period: '2nd Year (Ongoing)',
-      current: true
-    },
-    {
-      institution: 'Star Way Sr. Sec. School',
-      location: 'Yamuna Nagar, Haryana',
-      degree: 'Intermediate (Senior Secondary)',
-      specialization: 'Science Stream (Physics, Chemistry, Mathematics)',
-      metricLabel: 'Percentage',
-      metricValue: '93.6%',
-      period: 'Completed',
-      current: false
-    },
-    {
-      institution: 'Star Way Sr. Sec. School',
-      location: 'Yamuna Nagar, Haryana',
-      degree: 'Matriculation (Secondary School)',
-      specialization: 'Core Academic Curriculum',
-      metricLabel: 'Percentage',
-      metricValue: '93.6%',
-      period: 'Completed',
-      current: false
-    }
-  ];
-
+export default function About() {
   return (
-    <section id="about" className="section about-section" ref={sectionRef}>
-      <div className="container about-container">
-        {/* Section Header */}
-        <div className={`section-header reveal-item ${isVisible ? 'is-visible' : ''}`}>
-          <div className="section-tag">
-            <IconSparkles size={14} />
-            <span>Discover</span>
-          </div>
+    <section id="about" className="section-wrapper about-section">
+      <div className="container">
+        <div className="section-header reveal-item">
+          <span className="section-badge">Get to Know Me</span>
           <h2 className="section-title">
-            About <span className="gradient-text">Me</span>
+            About <span className="text-gradient">My Journey</span>
           </h2>
           <p className="section-subtitle">
-            Get to know my academic background, technical focus, and passion for technology.
+            An overview of my academic foundation, engineering mindset, and passion for artificial intelligence.
           </p>
         </div>
 
-        {/* Main About Overview: Profile Photo Beside Content */}
-        <div className={`about-split-layout reveal-item delay-1 ${isVisible ? 'is-visible' : ''}`}>
-          {/* Left Column: About Profile Image */}
-          <div className="about-image-column">
-            <div className="about-photo-wrapper">
-              <div className="about-photo-glow" />
-              <div className="about-photo-frame">
-                <img
-                  src="/resume/images/rancy-profile.jpg"
-                  alt="Rancy - About Me"
-                  className={`about-photo-img ${imgLoaded ? 'loaded' : ''}`}
-                  onLoad={() => setImgLoaded(true)}
-                />
-                <div className="about-photo-overlay">
-                  <span className="about-photo-name">Rancy</span>
-                  <span className="about-photo-role">B.Tech CSE (AI/ML)</span>
-                </div>
-              </div>
+        <div className="about-grid">
+          {/* Main Narrative Card */}
+          <div className="about-card about-narrative-card reveal-item stagger-1">
+            <div className="about-card-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Personal Narrative</span>
             </div>
-          </div>
-
-          {/* Right Column: Bio & Information Cards */}
-          <div className="about-text-column glass-card">
-            <div className="bio-glow-border" />
-            <div className="bio-content-wrapper">
-              <h3 className="about-card-heading">Engineering &amp; AI/ML Aspirations</h3>
-              <p className="about-bio-text">
-                I am a second-year B.Tech Computer Science and Engineering student specializing in Artificial Intelligence and Machine Learning at Lovely Professional University. I am passionate about software development, problem-solving, and learning new technologies. I enjoy building practical projects using Python and exploring concepts related to computer science and AI/ML.
-              </p>
-
-              <div className="about-highlights-grid">
-                <div className="highlight-pill">
-                  <span className="pill-dot"></span>
-                  <div className="pill-text-wrap">
-                    <span className="pill-title">Focus:</span>
-                    <span className="pill-value">AI/ML &amp; Software Dev</span>
-                  </div>
-                </div>
-                <div className="highlight-pill">
-                  <span className="pill-dot"></span>
-                  <div className="pill-text-wrap">
-                    <span className="pill-title">Academic Standing:</span>
-                    <span className="pill-value">8.21 CGPA</span>
-                  </div>
-                </div>
-                <div className="highlight-pill">
-                  <span className="pill-dot"></span>
-                  <div className="pill-text-wrap">
-                    <span className="pill-title">University:</span>
-                    <span className="pill-value">Lovely Professional University</span>
-                  </div>
-                </div>
-                <div className="highlight-pill">
-                  <span className="pill-dot"></span>
-                  <div className="pill-text-wrap">
-                    <span className="pill-title">Location:</span>
-                    <span className="pill-value">Phagwara, Punjab</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Education Subsection (Placed directly inside About) */}
-        <div className="education-subsection">
-          <div className={`education-header reveal-item delay-2 ${isVisible ? 'is-visible' : ''}`}>
-            <div className="edu-icon-badge">
-              <IconGraduationCap size={24} />
-            </div>
-            <h3 className="education-title">
-              Academic <span className="gradient-text">Education</span>
-            </h3>
-            <p className="education-sub">
-              A solid foundation in computer science, mathematics, and analytical problem-solving.
+            
+            <p className="about-text-content">
+              I am a second-year B.Tech Computer Science and Engineering student specializing in Artificial Intelligence and Machine Learning at Lovely Professional University. I am passionate about software development, problem-solving, and learning new technologies. I enjoy building practical projects using Python and exploring concepts related to computer science and AI/ML.
             </p>
+
+            <div className="about-pill-container">
+              <div className="about-pill">
+                <span className="pill-indicator-dot"></span>
+                <span>AI & Machine Learning Focus</span>
+              </div>
+              <div className="about-pill">
+                <span className="pill-indicator-dot"></span>
+                <span>Python & Practical Software Development</span>
+              </div>
+              <div className="about-pill">
+                <span className="pill-indicator-dot"></span>
+                <span>Algorithmic Problem Solving</span>
+              </div>
+            </div>
           </div>
 
-          <div className="education-timeline">
-            {educationData.map((item, index) => (
-              <div 
-                key={index} 
-                className={`education-card glass-card reveal-item delay-${index + 2} ${isVisible ? 'is-visible' : ''}`}
-              >
-                <div className="edu-timeline-dot">
-                  <div className="dot-inner" />
-                </div>
+          {/* Education Highlight Card */}
+          <div className="about-card education-card reveal-item stagger-2">
+            <div className="about-card-badge badge-education">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+              <span>Education Highlight</span>
+            </div>
 
-                <div className="edu-card-body">
-                  <div className="edu-top-row">
-                    <div className="edu-main-info">
-                      <h4 className="edu-institution">{item.institution}</h4>
-                      <div className="edu-meta-items">
-                        <span className="edu-meta-item">
-                          <IconMapPin size={14} />
-                          {item.location}
-                        </span>
-                        <span className="edu-meta-item">
-                          <IconCalendar size={14} />
-                          {item.period}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="edu-score-badge">
-                      <span className="score-label">{item.metricLabel}</span>
-                      <span className="score-number">{item.metricValue}</span>
-                    </div>
-                  </div>
-
-                  <div className="edu-degree-row">
-                    <div className="degree-title">
-                      <IconCheck size={16} className="check-icon" />
-                      <strong>{item.degree}</strong>
-                    </div>
-                    {item.specialization && (
-                      <p className="degree-specialization">{item.specialization}</p>
-                    )}
-                  </div>
-                </div>
+            <div className="edu-content-block">
+              <span className="edu-year-chip">2nd Year Undergraduate</span>
+              <h3 className="edu-program-title">B.Tech CSE (AI/ML)</h3>
+              <h4 className="edu-university-name">Lovely Professional University</h4>
+              
+              <div className="edu-location-tag">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>Phagwara, Punjab</span>
               </div>
-            ))}
+            </div>
+
+            <div className="edu-specs-box">
+              <div className="spec-row">
+                <span className="spec-label">Specialization:</span>
+                <span className="spec-value text-cyan">Artificial Intelligence & ML</span>
+              </div>
+              <div className="spec-row">
+                <span className="spec-label">Current Academic Level:</span>
+                <span className="spec-value">2nd Year (Ongoing)</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
-};
+}
