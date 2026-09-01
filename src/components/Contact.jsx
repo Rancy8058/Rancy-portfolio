@@ -1,203 +1,186 @@
 import React, { useState } from 'react';
-import './Contact.css';
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { 
+  IconMail, 
+  IconPhone, 
+  IconLinkedin, 
+  IconGithub, 
+  IconSend, 
+  IconSparkles,
+  IconCheck,
+  IconExternalLink
+} from './Icons';
 
-export default function Contact() {
+export const Contact = () => {
+  const [sectionRef, isVisible] = useIntersectionObserver();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
-
-  const [formStatus, setFormStatus] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
-      setFormStatus({
-        type: 'error',
-        text: 'Please fill in all fields before sending.'
-      });
-      return;
-    }
+    if (!formData.name || !formData.email || !formData.message) return;
 
+    // Trigger safe client-side mailto
     const subject = encodeURIComponent(`Portfolio Inquiry from ${formData.name}`);
-    const body = encodeURIComponent(`Hello Rancy,\n\n${formData.message}\n\nFrom: ${formData.name}\nEmail: ${formData.email}`);
-    
-    window.location.href = `mailto:rancybudgujjar8058@gmail.com?subject=${subject}&body=${body}`;
+    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+    const mailtoUrl = `mailto:rancybudgujjar8058@gmail.com?subject=${subject}&body=${body}`;
 
-    setFormStatus({
-      type: 'success',
-      text: 'Opening your default mail client to send your message'
-    });
-
-    setFormData({ name: '', email: '', message: '' });
+    window.location.href = mailtoUrl;
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({ name: '', email: '', message: '' });
+    }, 4000);
   };
 
+  const contactCards = [
+    {
+      title: 'Email Address',
+      value: 'rancybudgujjar8058@gmail.com',
+      href: 'mailto:rancybudgujjar8058@gmail.com',
+      icon: <IconMail size={22} />,
+      actionText: 'Send Email',
+      color: '#6C5CE7'
+    },
+    {
+      title: 'Phone Number',
+      value: '+91 9050803098',
+      href: 'tel:+919050803098',
+      icon: <IconPhone size={22} />,
+      actionText: 'Call Directly',
+      color: '#38BDF8'
+    },
+    {
+      title: 'LinkedIn Profile',
+      value: 'linkedin.com/in/rancy032',
+      href: 'https://www.linkedin.com/in/rancy032/',
+      icon: <IconLinkedin size={22} />,
+      actionText: 'View Profile',
+      isExternal: true,
+      color: '#7C6FF2'
+    },
+    {
+      title: 'GitHub Profile',
+      value: 'github.com/Rancy8058',
+      href: 'https://github.com/Rancy8058',
+      icon: <IconGithub size={22} />,
+      actionText: 'View Repositories',
+      isExternal: true,
+      color: '#A855F7'
+    }
+  ];
+
   return (
-    <section id="contact" className="section-wrapper contact-section">
+    <section id="contact" className="section contact-section" ref={sectionRef}>
       <div className="container">
-        <div className="section-header reveal-item">
-          <span className="section-badge">Get In Touch</span>
+        {/* Section Header */}
+        <div className={`section-header reveal-item ${isVisible ? 'is-visible' : ''}`}>
+          <div className="section-tag">
+            <IconSparkles size={14} />
+            <span>Let&apos;s Connect</span>
+          </div>
           <h2 className="section-title">
-            Let's <span className="text-gradient">Connect</span>
+            Get in <span className="gradient-text">Touch</span>
           </h2>
           <p className="section-subtitle">
-            Have a question, collaborative idea, or opportunity? Feel free to reach out directly via email, phone, or LinkedIn.
+            Whether you have an internship opportunity, a project collaboration, or just want to connect, feel free to reach out!
           </p>
         </div>
 
-        <div className="contact-grid">
-          {/* Left Column: Direct Contact Info Cards */}
-          <div className="contact-info-panel reveal-item stagger-1">
-            <h3 className="panel-title">Contact Channels</h3>
-            <p className="panel-description">
-              I am open to technical discussions, student collaborative projects, AI/ML exploration, and software engineering opportunities.
-            </p>
-
-            <div className="contact-links-list">
-              {/* Email */}
-              <a 
-                href="mailto:rancybudgujjar8058@gmail.com" 
-                className="contact-card-link"
+        <div className="contact-main-grid">
+          {/* Left Column: Direct Info Cards */}
+          <div className="contact-cards-column">
+            {contactCards.map((card, idx) => (
+              <a
+                key={card.title}
+                href={card.href}
+                target={card.isExternal ? '_blank' : undefined}
+                rel={card.isExternal ? 'noopener noreferrer' : undefined}
+                className={`contact-info-card glass-card reveal-item delay-${idx + 1} ${isVisible ? 'is-visible' : ''}`}
               >
-                <div className="contact-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                    <polyline points="22,6 12,13 2,6"></polyline>
-                  </svg>
+                <div className="contact-card-icon-box" style={{ borderColor: card.color, color: card.color }}>
+                  {card.icon}
                 </div>
-                <div className="contact-text-meta">
-                  <span className="contact-label">Email Address</span>
-                  <span className="contact-value">rancybudgujjar8058@gmail.com</span>
+                <div className="contact-card-details">
+                  <span className="contact-card-label">{card.title}</span>
+                  <strong className="contact-card-value">{card.value}</strong>
+                  <span className="contact-card-action">
+                    {card.actionText} {card.isExternal ? <IconExternalLink size={12} /> : '&rarr;'}
+                  </span>
                 </div>
               </a>
-
-              {/* Phone */}
-              <a 
-                href="tel:+919050803098" 
-                className="contact-card-link"
-              >
-                <div className="contact-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                </div>
-                <div className="contact-text-meta">
-                  <span className="contact-label">Phone & WhatsApp</span>
-                  <span className="contact-value">+91 9050803098</span>
-                </div>
-              </a>
-
-              {/* LinkedIn */}
-              <a 
-                href="https://www.linkedin.com/in/rancy032/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="contact-card-link"
-              >
-                <div className="contact-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                    <rect x="2" y="9" width="4" height="12"></rect>
-                    <circle cx="4" cy="4" r="2"></circle>
-                  </svg>
-                </div>
-                <div className="contact-text-meta">
-                  <span className="contact-label">LinkedIn Profile</span>
-                  <span className="contact-value">linkedin.com/in/rancy032</span>
-                </div>
-              </a>
-
-              {/* GitHub */}
-              <a 
-                href="https://github.com/Rancy8058" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="contact-card-link"
-              >
-                <div className="contact-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                  </svg>
-                </div>
-                <div className="contact-text-meta">
-                  <span className="contact-label">GitHub Repository</span>
-                  <span className="contact-value">github.com/Rancy8058</span>
-                </div>
-              </a>
-            </div>
+            ))}
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="contact-form-panel reveal-item stagger-2">
-            <h3 className="panel-title">Send a Direct Message</h3>
-            
-            <form className="contact-form" onSubmit={handleSubmit}>
+          <div className={`contact-form-column glass-card reveal-item delay-2 ${isVisible ? 'is-visible' : ''}`}>
+            <h3 className="form-heading">Send a Direct Message</h3>
+            <p className="form-description">
+              Fill in your details below to send an email inquiry directly to my inbox.
+            </p>
+
+            {isSubmitted && (
+              <div className="form-success-banner">
+                <IconCheck size={18} />
+                <span>Preparing your default email app to deliver the message...</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="contact-form">
               <div className="form-group">
-                <label htmlFor="contact-name" className="form-label">
-                  Your Name <span className="required-star">*</span>
-                </label>
+                <label htmlFor="name" className="form-label">Your Name</label>
                 <input
                   type="text"
-                  id="contact-name"
+                  id="name"
                   name="name"
-                  className="form-input"
-                  placeholder="e.g. John Doe"
                   value={formData.name}
                   onChange={handleChange}
+                  placeholder="Enter your name"
                   required
+                  className="form-input"
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="contact-email" className="form-label">
-                  Your Email Address <span className="required-star">*</span>
-                </label>
+                <label htmlFor="email" className="form-label">Your Email</label>
                 <input
                   type="email"
-                  id="contact-email"
+                  id="email"
                   name="email"
-                  className="form-input"
-                  placeholder="e.g. john@example.com"
                   value={formData.email}
                   onChange={handleChange}
+                  placeholder="name@example.com"
                   required
+                  className="form-input"
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="contact-message" className="form-label">
-                  Message <span className="required-star">*</span>
-                </label>
+                <label htmlFor="message" className="form-label">Your Message</label>
                 <textarea
-                  id="contact-message"
+                  id="message"
                   name="message"
                   rows="4"
-                  className="form-textarea"
-                  placeholder="Write your message here..."
                   value={formData.message}
                   onChange={handleChange}
+                  placeholder="Write your message here..."
                   required
-                ></textarea>
+                  className="form-input form-textarea"
+                />
               </div>
 
-              {formStatus && (
-                <div className={`form-feedback-alert ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}>
-                  {formStatus.text}
-                </div>
-              )}
-
-              <button type="submit" className="btn btn-primary btn-lg submit-btn">
+              <button type="submit" className="btn btn-primary form-submit-btn">
                 <span>Send Message</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
+                <IconSend size={16} />
               </button>
             </form>
           </div>
@@ -205,4 +188,4 @@ export default function Contact() {
       </div>
     </section>
   );
-}
+};

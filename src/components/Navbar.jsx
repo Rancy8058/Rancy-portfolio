@@ -1,38 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import './Navbar.css';
+import { IconMenu, IconClose, IconArrowRight } from './Icons';
 
-const navItems = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Certifications', href: '#certifications' },
-  { label: 'Resume', href: '#resume' },
-  { label: 'Contact', href: '#contact' },
-];
-
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+export const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+
+  const navLinks = [
+    { name: 'Home', href: '#home' },
+    { name: 'About', href: '#about' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Certifications', href: '#certifications' },
+    { name: 'Achievements', href: '#achievements' },
+    { name: 'Resume', href: '#resume' },
+    { name: 'Contact', href: '#contact' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 25);
 
-      // Scrollspy detection
-      const sections = navItems.map(item => item.href.substring(1));
-      const scrollPosition = window.scrollY + 140;
+      const sectionIds = navLinks.map(link => link.href.substring(1));
+      const scrollPosition = window.scrollY + 220;
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const sectionEl = document.getElementById(sections[i]);
-        if (sectionEl && sectionEl.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          break;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const sectionEl = document.getElementById(sectionIds[i]);
+        if (sectionEl) {
+          const top = sectionEl.offsetTop;
+          if (scrollPosition >= top) {
+            setActiveSection(sectionIds[i]);
+            break;
+          }
         }
       }
     };
@@ -41,50 +40,39 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e, href) => {
+  const handleLinkClick = (e, href) => {
     e.preventDefault();
-    setIsOpen(false);
+    setMobileMenuOpen(false);
     const targetId = href.substring(1);
-    const element = document.getElementById(targetId);
-    if (element) {
-      const navOffset = 76;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <header className={`navbar-header ${scrolled ? 'navbar-scrolled' : ''}`}>
-      <div className="navbar-container container">
-        <a 
-          href="#home" 
-          className="navbar-logo" 
-          onClick={(e) => handleNavClick(e, '#home')}
-        >
-          <span className="logo-badge-icon">&lt;/&gt;</span>
-          <span className="logo-text">Rancy</span>
+    <header className={`navbar-wrapper ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="container nav-container">
+        {/* Brand Logo */}
+        <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="brand-logo" aria-label="Rancy Home">
+          <span className="brand-badge">&lt;R /&gt;</span>
+          <span className="brand-name">Rancy</span>
         </a>
 
-        {/* Desktop Navigation Links */}
-        <nav className="desktop-nav">
+        {/* Desktop Nav */}
+        <nav className="desktop-nav" aria-label="Main Navigation">
           <ul className="nav-list">
-            {navItems.map((item) => {
-              const sectionId = item.href.substring(1);
-              const isActive = activeSection === sectionId;
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.substring(1);
               return (
-                <li key={item.label} className="nav-item">
+                <li key={link.name} className="nav-item">
                   <a
-                    href={item.href}
-                    className={`nav-link ${isActive ? 'nav-link-active' : ''}`}
-                    onClick={(e) => handleNavClick(e, item.href)}
+                    href={link.href}
+                    onClick={(e) => handleLinkClick(e, link.href)}
+                    className={`nav-link ${isActive ? 'active' : ''}`}
                   >
-                    {item.label}
-                    {isActive && <span className="nav-active-pill"></span>}
+                    {link.name}
+                    {isActive && <span className="active-dot" />}
                   </a>
                 </li>
               );
@@ -92,64 +80,78 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Action Button on Navbar */}
-        <div className="navbar-action">
-          <a 
-            href="#contact" 
-            className="btn btn-sm btn-primary nav-cta"
-            onClick={(e) => handleNavClick(e, '#contact')}
+        {/* CTA Button */}
+        <div className="nav-cta-wrapper">
+          <a
+            href="#contact"
+            onClick={(e) => handleLinkClick(e, '#contact')}
+            className="btn btn-sm btn-primary nav-cta-btn"
           >
             <span>Get in Touch</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
+            <IconArrowRight size={14} />
           </a>
         </div>
 
         {/* Mobile Hamburger Toggle */}
         <button
-          className={`mobile-toggle ${isOpen ? 'toggle-open' : ''}`}
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          aria-expanded={isOpen}
+          className="mobile-toggle-btn"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+          aria-expanded={mobileMenuOpen}
         >
-          <span className="toggle-bar"></span>
-          <span className="toggle-bar"></span>
-          <span className="toggle-bar"></span>
+          {mobileMenuOpen ? <IconClose size={24} /> : <IconMenu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
-      <div className={`mobile-menu ${isOpen ? 'mobile-menu-open' : ''}`}>
-        <ul className="mobile-nav-list">
-          {navItems.map((item) => {
-            const sectionId = item.href.substring(1);
-            const isActive = activeSection === sectionId;
-            return (
-              <li key={item.label} className="mobile-nav-item">
-                <a
-                  href={item.href}
-                  className={`mobile-nav-link ${isActive ? 'mobile-nav-link-active' : ''}`}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  <span>{item.label}</span>
-                  {isActive && <span className="mobile-active-dot"></span>}
-                </a>
-              </li>
-            );
-          })}
-          <li className="mobile-nav-item mobile-cta-item">
-            <a 
-              href="#contact" 
-              className="btn btn-primary btn-sm mobile-cta-btn"
-              onClick={(e) => handleNavClick(e, '#contact')}
+      {/* Mobile Drawer */}
+      <div className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-drawer-backdrop" onClick={() => setMobileMenuOpen(false)} />
+        <div className="mobile-drawer-content">
+          <div className="mobile-drawer-header">
+            <div className="brand-logo">
+              <span className="brand-badge">&lt;R /&gt;</span>
+              <span className="brand-name">Rancy</span>
+            </div>
+            <button
+              className="mobile-close-btn"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close Menu"
             >
-              Get in Touch
+              <IconClose size={22} />
+            </button>
+          </div>
+
+          <ul className="mobile-nav-list">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.substring(1);
+              return (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleLinkClick(e, link.href)}
+                    className={`mobile-nav-link ${isActive ? 'active' : ''}`}
+                  >
+                    <span>{link.name}</span>
+                    {isActive && <span className="mobile-active-tag">Active</span>}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mobile-drawer-footer">
+            <a
+              href="#contact"
+              onClick={(e) => handleLinkClick(e, '#contact')}
+              className="btn btn-primary"
+              style={{ width: '100%' }}
+            >
+              <span>Get in Touch</span>
+              <IconArrowRight size={16} />
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </header>
   );
-}
+};

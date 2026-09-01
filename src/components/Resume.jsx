@@ -1,53 +1,98 @@
 import React from 'react';
-import './Resume.css';
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { 
+  IconFileText, 
+  IconDownload, 
+  IconExternalLink, 
+  IconSparkles, 
+  IconCheck 
+} from './Icons';
 
-export default function Resume() {
+export const Resume = () => {
+  const [sectionRef, isVisible] = useIntersectionObserver();
+  const resumeUrl = '/resume/Rancy_Resume.pdf';
+
+  const resumeHighlights = [
+    { title: 'Education', desc: 'B.Tech CSE (AI/ML) 2nd Year, LPU Punjab (8.21 CGPA)' },
+    { title: 'Core Stack', desc: 'Python, C/C++, SQL, PL/SQL, MongoDB, SQLite' },
+    { title: 'Projects', desc: 'Smart Expense Tracker (Desktop & ML), Tic-Tac-Toe' },
+    { title: 'Certifications', desc: 'Infosys Springboard (Python, AI), HackerRank CSS' }
+  ];
+
   return (
-    <section id="resume" className="section-wrapper resume-section">
+    <section id="resume" className="section resume-section" ref={sectionRef}>
       <div className="container">
-        <div className="section-header reveal-item">
-          <span className="section-badge">Curriculum Vitae</span>
+        {/* Section Header */}
+        <div className={`section-header reveal-item ${isVisible ? 'is-visible' : ''}`}>
+          <div className="section-tag">
+            <IconSparkles size={14} />
+            <span>Curriculum Vitae</span>
+          </div>
           <h2 className="section-title">
-            <span className="text-gradient">Resume</span>
+            My <span className="gradient-text">Resume</span>
           </h2>
           <p className="section-subtitle">
-            Academic qualifications, technical competencies, and engineering project portfolio.
+            A comprehensive record of my academic qualifications, technical abilities, and engineering projects.
           </p>
         </div>
 
-        <div className="resume-card-glow-wrap reveal-item stagger-1">
-          <div className="resume-card">
-            <div className="resume-content">
-              <div className="resume-badge">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                <span>Professional Profile</span>
+        {/* Resume Box */}
+        <div className={`resume-wrapper glass-card reveal-item delay-1 ${isVisible ? 'is-visible' : ''}`}>
+          <div className="resume-glow-ambient" />
+          
+          <div className="resume-content-layout">
+            {/* Left Preview Box */}
+            <div className="resume-preview-box">
+              <div className="doc-icon-circle">
+                <IconFileText size={48} />
+              </div>
+              <h3 className="preview-name">Rancy</h3>
+              <p className="preview-role">B.Tech CSE (AI/ML) &bull; Software Developer</p>
+              <div className="preview-badge">PDF Format Document</div>
+            </div>
+
+            {/* Right Details & Action Buttons */}
+            <div className="resume-details-box">
+              <div className="resume-highlights-header">
+                <h4 className="resume-sub-title">Quick Profile Highlights:</h4>
               </div>
 
-              <h3 className="resume-heading">Curriculum Vitae</h3>
+              <div className="resume-highlights-grid">
+                {resumeHighlights.map((item, idx) => (
+                  <div key={idx} className="resume-highlight-item">
+                    <div className="highlight-check-wrap">
+                      <IconCheck size={14} />
+                    </div>
+                    <div>
+                      <strong className="hl-title">{item.title}: </strong>
+                      <span className="hl-desc">{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-              <p className="resume-description">
-                Comprehensive record of coursework in B.Tech CSE (AI/ML), programming competencies in Python & C/C++, SQLite database systems, and hands-on developer projects.
-              </p>
+              {/* Action Buttons */}
+              <div className="resume-actions-group">
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary resume-action-btn"
+                  aria-label="View Rancy's Resume in a new tab"
+                >
+                  <IconExternalLink size={18} />
+                  <span>View Resume</span>
+                </a>
 
-              <div className="resume-highlights-row">
-                <div className="resume-highlight-tag">
-                  <span className="highlight-dot"></span>
-                  <span>B.Tech CSE (AI/ML)</span>
-                </div>
-                <div className="resume-highlight-tag">
-                  <span className="highlight-dot"></span>
-                  <span>Python & Core CS</span>
-                </div>
-                <div className="resume-highlight-tag">
-                  <span className="highlight-dot"></span>
-                  <span>Lovely Professional University</span>
-                </div>
+                <a
+                  href={resumeUrl}
+                  download="Rancy_Resume.pdf"
+                  className="btn btn-secondary resume-action-btn"
+                  aria-label="Download Rancy's Resume PDF"
+                >
+                  <IconDownload size={18} />
+                  <span>Download Resume</span>
+                </a>
               </div>
             </div>
           </div>
@@ -55,4 +100,4 @@ export default function Resume() {
       </div>
     </section>
   );
-}
+};
